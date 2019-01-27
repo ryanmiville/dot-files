@@ -1,0 +1,68 @@
+#
+# Executes commands at the start of an interactive session.
+#
+# Authors:
+#   Sorin Ionescu <sorin.ionescu@gmail.com>
+#
+
+# Source Prezto.
+if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
+  source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
+fi
+
+export DEFAULT_USER=$USER
+export EDITOR=vim
+export VISUAL="$EDITOR"
+
+# - Powerlevel9k theme configuration
+# - - Prompts
+POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context dir vcs)
+POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status root_indicator background_jobs virtualenv time)
+
+# - - dir
+POWERLEVEL9K_SHORTEN_DIR_LENGTH=1
+POWERLEVEL9K_SHORTEN_DELIMITER=""
+POWERLEVEL9K_SHORTEN_STRATEGY="truncate_from_right"
+
+# - Prezto theme 
+autoload -Uz promptinit
+promptinit
+
+# - ZSH Plugins
+source /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+
+# - Go Development
+export GOPATH=$HOME/go
+export GOROOT=/usr/local/opt/go/libexec
+export PATH=$PATH:$GOPATH/bin
+export PATH=$PATH:$GOROOT/bin
+
+# - Rust Development
+export PATH=$PATH:$HOME/.cargo/bin
+
+# - AWS
+export AWS_REGION=us-east-1
+# - 
+# ALIASES
+# - - Git
+eval "$(hub alias -s)"
+alias gu='cd $(git rev-parse --show-toplevel)'
+alias gs='git status'
+alias gbr="git branch | grep -v "master" | xargs git branch -D"
+alias gk='ginkgo'
+alias tf='terraform'
+
+# - - shortcuts
+alias cdt="cd ~/go/src/github.com/GetTerminus"
+
+# - - Docker Compose
+alias localstack="TMPDIR=/private$TMPDIR docker-compose -f ~/docker-compose/localstack/docker-compose.yml up -d"
+alias localstack-down="TMPDIR=/private$TMPDIR docker-compose -f ~/docker-compose/localstack/docker-compose.yml down"
+alias dsftp="docker-compose -f ~/docker-compose/sftp/docker-compose.yml up -d"
+alias dsftp-down="docker-compose -f ~/docker-compose/sftp/docker-compose.yml down"
+
+# - enable option+arrows
+bindkey "\e\e[D" backward-word
+bindkey "\e\e[C" forward-word
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
